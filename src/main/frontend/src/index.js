@@ -1,15 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import Todo from './todoapp/Todo';
-import AppTodo from './todoapp/AppTodo';
-import AddTodo from './todoapp/AddTodo';
+import Index from './todoapp/Index';
+import AppRouter from './todoapp/AppRouter';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <AppTodo />
+    <AppRouter tab="home" />
   </React.StrictMode>
 );
 

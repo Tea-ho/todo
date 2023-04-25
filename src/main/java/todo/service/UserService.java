@@ -32,11 +32,12 @@ public class UserService {
     public UserEntity getByCredentials(final String username, final String password, final PasswordEncoder encoder){
 
         final UserEntity entity = userRepository.findByUsername(username);
-
+        
+        // mathes 메소드 이용해서 패스워드 일치 여부 확인 (적합하면 entity 반환)
         if( entity != null && encoder.matches(password, entity.getPassword()) ){
             return entity;
         }
-        return null;
+        return null; // 부적합 null 반환
     }
 
 }

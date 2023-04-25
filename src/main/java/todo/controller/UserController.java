@@ -3,6 +3,8 @@ package todo.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,7 @@ import todo.service.UserService;
 public class UserController {
     @Autowired private UserService userService;
     @Autowired private TokenProvider tokenProvider;
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     
     // 1. 유저 등록
     @PostMapping("/signup")
@@ -32,7 +35,7 @@ public class UserController {
             // 2. request 정보로 유저 객체 생성 후 초기화 작업
             UserEntity user = UserEntity.builder()
                     .username(userDto.getUsername())
-                    .password(userDto.getPassword())
+                    .password(passwordEncoder.encode(userDto.getPassword()))
                     .build();
             
             // 3. 서비스 이용하여 리포지터리에 유저 정보 저장 후 반환
@@ -54,9 +57,9 @@ public class UserController {
     @PostMapping("/signin")
     public ResponseEntity<?> authenticate(@RequestBody UserDto userDto){
         
-        // 1. Request 정보로 user 정보 찾기
+        // 1. Request 정보로 user 정보 찾기 (encoding된 password 비교에 사용)
         UserEntity user = userService.getByCredentials(
-                userDto.getUsername(), userDto.getPassword()
+                userDto.getUsername(), userDto.getPassword(), passwordEncoder
         );
         // 2. 유효성 검사
         if(user != null){ // 유저 정보 찾으면 저장된 정보 반환

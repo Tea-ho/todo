@@ -35,7 +35,7 @@ export default function Todo( props ) {
     const turnOnRead = (e) => {
         if(e.key === "Enter"){
             setReadOnly(true);
-            axios.put("http://localhost:8080/todo", item).then(r=> {editItem();});
+            axios.put("http://localhost:8080/todo/update.do", item).then(r=> {editItem();});
         }
     }
 
@@ -48,7 +48,7 @@ export default function Todo( props ) {
     }
     const checkboxEventHandler = (e) => { // checkboxEventHandler 생성(기능: 체크 박스 상태 변화)
         item.done = e.target.checked;
-        axios.put("http://localhost:8080/todo", item).then(r=>{ editItem();
+        axios.put("http://localhost:8080/todo/update.do", item).then(r=>{ editItem();
         })
 
     }

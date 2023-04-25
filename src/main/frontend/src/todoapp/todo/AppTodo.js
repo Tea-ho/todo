@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Todo from './Todo';
-import { Container, List, Paper } from '@mui/material';
+import { Container, List, Paper, Grid, Button, AppBar, Toolbar, Typography } from '@mui/material';
 import AddTodo from './AddTodo';
+import { call, signout } from '../service/ApiService';
 import axios from 'axios'; // npm install axios
 
 export default function AppTodo( props ) {
@@ -16,7 +17,7 @@ export default function AppTodo( props ) {
 
     // -------------------------------- Back end Server Connection part
     const getTodo = () => {
-        axios.get("http://localhost:8080/todo")
+        axios.get("http://localhost:8080/todo/list.do")
             .then( r => {
                 console.log(r);
                 setItems(r.data);
@@ -37,7 +38,7 @@ export default function AppTodo( props ) {
         // 해석: setItems([...기존배열, 값]); 기존 배열에 값 추가하는 문법
         // 특징: 실행될 때마다 재랜더링 진행
 
-        axios.post("http://localhost:8080/todo", item).then(r=>{getTodo();});
+        axios.post("http://localhost:8080/todo/create.do", item).then(r=>{getTodo();});
     }
 
     // -------------------------------- deleting Item part --------------------------------
@@ -58,7 +59,7 @@ export default function AppTodo( props ) {
         // 2) map: 반복문 기능 수행하면서 return 반환처리 가능
         // 3) filter: 반복문 기능 수행하면서 조건부 return 반환 처리 가능
 
-        axios.delete("http://localhost:8080/todo", {params: {tno: item.id}}).then(r=>{getTodo();});
+        axios.delete("http://localhost:8080/todo/delete.do", {params: {tno: item.id}}).then(r=>{getTodo();});
     }
 
     // -------------------------------- editing Item part --------------------------------
@@ -83,9 +84,30 @@ export default function AppTodo( props ) {
     // 해석4: i의 id 등의 값은 위에 addItem 메소드를 통해 초기화 됨
     // 해석5: Todo.js에서 props로 item, key, deleteItem 3가지를 받고 있음. (필요에 맞게 Todo.js에서 분배하여 사용)
 
+    // navigationBar 추가
+    let navigationBar = (
+        <AppBar position="static">
+            <Toolbar>
+               <Grid justifyContent="space-between" container>
+                    <Grid item>
+                        <Typography variant="h6"> Todo List </Typography>
+                    </Grid>
+               </Grid>
+               <Grid item>
+                    <Button color="inherit" onClick={signout}>
+                        logout
+                    </Button>
+               </Grid>
+            </Toolbar>
+        </AppBar>
+    );
+
+    // pagination 추가
+
     // -------------------------------- return part --------------------------------
     return(<>
         <div className="App">
+            {navigationBar}
             <Container maxWidth="md">
                 <AddTodo addItem={addItem} />
                 <div className="TodoList">{ TodoItems }</div>

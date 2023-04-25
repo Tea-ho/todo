@@ -11,18 +11,16 @@ import todo.domain.entity.TodoEntity;
 import todo.service.TodoService;
 
 import java.util.List;
-import java.util.SimpleTimeZone;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/todo") @Slf4j
-@CrossOrigin(origins="http://localhost:3000")
 public class TodoController {
 
     @Autowired
     private TodoService todoService;
 
-    @GetMapping("")
+    @GetMapping("/list.do") @CrossOrigin(origins="http://localhost:3000")
     public ResponseEntity<?> retrieveTodoList(@AuthenticationPrincipal String userId){
         // 1. 서비스 메소드의 retrieve 메소드를 사용해서 todo 리스트 가져오기
         List<TodoEntity> entities = todoService.retrieve(userId);
@@ -31,7 +29,7 @@ public class TodoController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("") @CrossOrigin(origins="http://localhost:3000")
+    @PostMapping("/create.do") @CrossOrigin(origins="http://localhost:3000")
     public ResponseEntity<?> createTodo(@AuthenticationPrincipal String userId, @RequestBody TodoDto dto){
         log.info("controller post" + dto);
         try{
@@ -43,13 +41,12 @@ public class TodoController {
             ResponseDTO<TodoDto> response = ResponseDTO.<TodoDto>builder().data(dtos).build();
             return ResponseEntity.ok(response);
         } catch (Exception e){
-
             String error = e.getMessage();
             ResponseDTO<TodoDto> response = ResponseDTO.<TodoDto>builder().error(error).build();
             return ResponseEntity.badRequest().body(response);
         }
     }
-    @PutMapping("")
+    @PutMapping("/update.do") @CrossOrigin(origins="http://localhost:3000")
     public ResponseEntity<?> updateTodo(@AuthenticationPrincipal String userId, @RequestBody TodoDto dto){
         TodoEntity entity = dto.toEntity();
         entity.setUserId(userId);
@@ -59,7 +56,7 @@ public class TodoController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/delete.do") @CrossOrigin(origins="http://localhost:3000")
     public ResponseEntity<?> delete(@AuthenticationPrincipal String userId, @RequestBody TodoDto dto){
         try{
             TodoEntity entity = dto.toEntity();
