@@ -1,44 +1,77 @@
 package todo.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import todo.domain.dto.ResponseDTO;
 import todo.domain.dto.TodoDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import todo.domain.entity.TodoEntity;
 import todo.service.TodoService;
 
 import java.util.List;
+import java.util.SimpleTimeZone;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/todo") @Slf4j
+@CrossOrigin(origins="http://localhost:3000")
 public class TodoController {
 
     @Autowired
     private TodoService todoService;
 
-    @GetMapping("") @CrossOrigin(origins="http://localhost:3000")
-    public List<TodoDto> get(){
-        log.info("get");
-        List<TodoDto> todoList = todoService.getTodo();
-        return todoList;
+    @GetMapping("")
+    public ResponseEntity<?> retrieveTodoList(@AuthenticationPrincipal String userId){
+        // 1. 서비스 메소드의 retrieve 메소드를 사용해서 todo 리스트 가져오기
+        List<TodoEntity> entities = todoService.retrieve(userId);
+        List<TodoDto> dtos = entities.stream().map(TodoDto::new).collect(Collectors.toList());
+        ResponseDTO<TodoDto> response = ResponseDTO.<TodoDto>builder().data(dtos).build();
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("") @CrossOrigin(origins="http://localhost:3000")
-    public boolean post(@RequestBody TodoDto dto){
+    public ResponseEntity<?> createTodo(@AuthenticationPrincipal String userId, @RequestBody TodoDto dto){
         log.info("controller post" + dto);
-        boolean result = todoService.writeTodo(dto);
-        return result;
+        try{
+            TodoEntity entity = dto.toEntity(); // --- 확인 필요
+            entity.setId(null); // --- id null로 초기화(생성 당시에는 id가 없어야 함)
+            entity.setUserId(userId); // --- Authentication Bearer Token을 통해 받은 userID 전달
+            List<TodoEntity> entities = todoService.create(entity);
+            List<TodoDto> dtos = entities.stream().map(TodoDto::new).collect(java.util.stream.Collectors.toList());
+            ResponseDTO<TodoDto> response = ResponseDTO.<TodoDto>builder().data(dtos).build();
+            return ResponseEntity.ok(response);
+        } catch (Exception e){
+
+            String error = e.getMessage();
+            ResponseDTO<TodoDto> response = ResponseDTO.<TodoDto>builder().error(error).build();
+            return ResponseEntity.badRequest().body(response);
+        }
     }
-    @PutMapping("") @CrossOrigin(origins="http://localhost:3000")
-    public boolean put(@RequestBody TodoDto dto){
-        log.info("controller put" + dto);
-        boolean result = todoService.updateTodo(dto);
-        return result;
+    @PutMapping("")
+    public ResponseEntity<?> updateTodo(@AuthenticationPrincipal String userId, @RequestBody TodoDto dto){
+        TodoEntity entity = dto.toEntity();
+        entity.setUserId(userId);
+        List<TodoEntity> entities = todoService.updateTodo(entity);
+        List<TodoDto> dtos = entities.stream().map(TodoDto::new).collect(Collectors.toList());
+        ResponseDTO<TodoDto> response = ResponseDTO.<TodoDto>builder().data(dtos).build();
+        return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("") @CrossOrigin(origins="http://localhost:3000")
-    public boolean delete(@RequestParam int tno){
-        log.info("controller delete" + tno);
-        boolean result = todoService.deleteTodo(tno);
-        return result;
+    @DeleteMapping("")
+    public ResponseEntity<?> delete(@AuthenticationPrincipal String userId, @RequestBody TodoDto dto){
+        try{
+            TodoEntity entity = dto.toEntity();
+            entity.setUserId(userId);
+            List<TodoEntity> entities = todoService.deleteTodo(entity);
+            List<TodoDto> dtos = entities.stream().map(TodoDto::new).collect(Collectors.toList());
+            ResponseDTO<TodoDto> response = ResponseDTO.<TodoDto>builder().data(dtos).build();
+            return ResponseEntity.ok(response);
+        } catch (Exception e){
+            String error = e.getMessage();
+            ResponseDTO<TodoDto> response = ResponseDTO.<TodoDto>builder().error(error).build();
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 }

@@ -13,13 +13,19 @@ import lombok.NoArgsConstructor;
 public class TodoDto { //
 
     //할일 pk 번호
-    private int id;
+    private String id;
 
     //할일 내용
     private String title;
 
     //할일 여부
     private boolean done;
+
+    public TodoDto(final TodoEntity todoEntity) {
+        this.id = todoEntity.getId();
+        this.title = todoEntity.getTitle();
+        this.done = todoEntity.isDone();
+    }
 
     //toEntity[저장용]
     public TodoEntity toEntity() {

@@ -1,5 +1,6 @@
 package todo.service;
 
+import org.springframework.http.ResponseEntity;
 import todo.domain.dto.TodoDto;
 import todo.domain.entity.TodoEntity;
 import todo.domain.entity.TodoEntityRepository;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,56 +17,74 @@ public class TodoService {
     @Autowired
     TodoEntityRepository todoEntityRepository;
 
+    @Transactional
+    public List<TodoEntity> create(final TodoEntity entity) {
+        validate(entity);
+        todoEntityRepository.save(entity);
+        log.info("service create : " + entity.getId());
+        return todoEntityRepository.findByUserId(entity.getUserId());
+    }
+
+    private void validate(final TodoEntity entity) { // 유효성 검사
+
+        if(entity==null){
+            log.info("Entity cannot be null.");
+            throw new RuntimeException("Entity cannot be null.");
+        }
+
+        if(entity.getUserId()==null){
+            log.info("Unknown user.");
+            throw new RuntimeException("Unknown user.");
+        }
+
+    }
+
     //할일 등록
     @Transactional
     public boolean writeTodo(TodoDto todoDto){
         log.info("service todo post : " +todoDto );
         TodoEntity entity = todoEntityRepository.save(todoDto.toEntity());
 
-        if(entity.getId() > 0){
+        if(entity.getId() != null ){
             return true;
         }
 
         return false;
     }
 
-    //할일 출력
+    //
     @Transactional
-    public List<TodoDto> getTodo(){
-        List<TodoDto> list = new ArrayList<TodoDto>();;
-        List<TodoEntity> entity = todoEntityRepository.findAll();
-        System.out.println("service todo get :" + entity);
-        entity.forEach((e) -> {
-            list.add(e.toDto());
-        });
-
-        return list;
+    public List<TodoEntity> retrieve(final String userId){
+        return todoEntityRepository.findByUserId(userId);
     }
+
+
 
     //할일 수정
     @Transactional
-    public boolean updateTodo(TodoDto todoDto){
-        Optional<TodoEntity> todoEntityOptional = todoEntityRepository.findById(todoDto.getId());
+    public List<TodoEntity> updateTodo(final TodoEntity entity){
 
-        if(todoEntityOptional.isPresent()){
-            TodoEntity entity = todoEntityOptional.get();
+        validate(entity); // 유효성 검사 진행
 
-            entity.setDone(todoDto.isDone());
-            entity.setTitle(todoDto.getTitle());
-            return true;
-        }
-        return false;
+        final Optional<TodoEntity> todoEntityOptional = todoEntityRepository.findById(entity.getId());
+        todoEntityOptional.ifPresent(todo -> {
+
+            todo.setTitle(entity.getTitle());
+            todo.setDone(entity.isDone());
+            todoEntityRepository.save(todo);
+        });
+        return retrieve(entity.getUserId());
     }
     //할일 삭제
     @Transactional
-    public boolean deleteTodo(int tno){
-        Optional<TodoEntity> optionalTodo = todoEntityRepository.findById(tno);
-
-        if(optionalTodo.isPresent()){
-            todoEntityRepository.delete(optionalTodo.get());
-            return true;
+    public List<TodoEntity> deleteTodo(final TodoEntity entity){
+        validate(entity); // 유효성 검사 진행
+        try{
+            todoEntityRepository.delete(entity);
+        } catch (Exception e){
+            log.info("service delete : " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
-        return false;
+        return retrieve(entity.getUserId());
     }
-
 }

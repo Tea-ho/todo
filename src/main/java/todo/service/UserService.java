@@ -2,6 +2,7 @@ package todo.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import todo.domain.entity.UserEntity;
 import todo.domain.entity.UserRepository;
@@ -28,8 +29,14 @@ public class UserService {
     }
     
     // 유저 정보 반환 (조건: 이름과 비밀번호 일치 여부)
-    public UserEntity getByCredentials(final String username, final String password){
-        return userRepository.findByUsernameAndPassword(username, password);
+    public UserEntity getByCredentials(final String username, final String password, final PasswordEncoder encoder){
+
+        final UserEntity entity = userRepository.findByUsername(username);
+
+        if( entity != null && encoder.matches(password, entity.getPassword()) ){
+            return entity;
+        }
+        return null;
     }
 
 }
