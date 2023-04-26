@@ -3,7 +3,7 @@ import Todo from './Todo';
 import { Container, List, Paper, Grid, Button, AppBar, Toolbar, Typography } from '@mui/material';
 import AddTodo from './AddTodo';
 import { call, signout } from '../service/ApiService';
-import axios from 'axios'; // npm install axios
+// import axios from 'axios'; // npm install axios
 
 export default function AppTodo( props ) {
 
@@ -16,6 +16,24 @@ export default function AppTodo( props ) {
     // 해석3: 등록되어 있는 item 데이터를 담기 위해 배열 형태로 생성 ([] 사용)
 
     // -------------------------------- Back end Server Connection part
+    useEffect(() => {
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json'},
+        };
+        fetch("http://localhost:8080/todo/list.do", requestOptions)
+            .then(response => response.json())
+            .then(
+                (response)=>{ setItems(response.data); },
+                (error) => { } );
+    }, []);
+
+    useEffect(()) => {
+        call("/todo/list.do", "GET", null)
+            .then((response)=> setItems(response.data));
+    },[]);
+
+    /*
     const getTodo = () => {
         axios.get("http://localhost:8080/todo/list.do")
             .then( r => {
@@ -24,32 +42,39 @@ export default function AppTodo( props ) {
                 }
             );
     }
-
     useEffect(()=>{
         getTodo();
      }, [])
-
+    */
     // -------------------------------- adding Item part --------------------------------
     // addItem 메소드 생성(기능: item을 인수로 받은 후 초기화 진행 후 배열에 추가)
     const addItem = (item) => {
         // item.id = "ID-"+items.length
         // item.done = false;
-        setItems([...items, item ]);
+        // setItems([...items, item ]);
         // 해석: setItems([...기존배열, 값]); 기존 배열에 값 추가하는 문법
         // 특징: 실행될 때마다 재랜더링 진행
 
-        axios.post("http://localhost:8080/todo/create.do", item).then(r=>{getTodo();});
+        call("/todo/create.do", "POST", item)
+            .then((response)=> setItems(response.data));
+    };
+
+        //axios.post("http://localhost:8080/todo/create.do", item).then(r=>{getTodo();});
     }
 
     // -------------------------------- deleting Item part --------------------------------
     const deleteItem = (item) => {
             console.log(items);
             console.log(item);
-        const newItems = items.filter( e => e.id !== item.id );
+
+        call("/todo/delete.do", "DELETE", item)
+            .then((response)=> setItems(response.data));
+
+        // const newItems = items.filter( e => e.id !== item.id );
         // 해석1: 신규 배열 newItems 선언
         // 해석2: items에 저장되어 있는 item의 id와 삭제할 id가 같지 않으면, item 반환
         // 해석3: 조건에 맞는 item으로 newItems에 저장 작업 반복 진행
-        setItems( [...newItems] );
+        // setItems( [...newItems] );
         // 해석: setItems 이용하여 초기화 작업 진행
 
         // 배열/리스트.filter( (o) => {} );
@@ -59,12 +84,14 @@ export default function AppTodo( props ) {
         // 2) map: 반복문 기능 수행하면서 return 반환처리 가능
         // 3) filter: 반복문 기능 수행하면서 조건부 return 반환 처리 가능
 
-        axios.delete("http://localhost:8080/todo/delete.do", {params: {tno: item.id}}).then(r=>{getTodo();});
+        // axios.delete("http://localhost:8080/todo/delete.do", {params: {tno: item.id}}).then(r=>{getTodo();});
     }
 
     // -------------------------------- editing Item part --------------------------------
-    const editItem = ()=>{
-        setItems([...items]);
+    const editItem = (item)=>{
+        // setItems([...items]);
+        call("/todo/update.do", "PUT", item)
+            .then((response)=> setItems(response.data));
     };
 
     // -------------------------------- creating TodoItems part --------------------------------

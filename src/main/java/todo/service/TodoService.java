@@ -47,8 +47,6 @@ public class TodoService {
         return todoEntityRepository.findByUserId(userId);
     }
 
-
-
     // 3. 업데이트 메소드 (기능: entity 받아서 변경된 내용 적용)
     @Transactional
     public List<TodoEntity> updateTodo(final TodoEntity entity){
