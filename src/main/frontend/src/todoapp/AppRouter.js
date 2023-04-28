@@ -6,6 +6,7 @@ import SignUp from './member/SignUp';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Typography, Box } from '@mui/material';
 
+// router 연결 파일
 function Copyright(props) {
     return (
         <Typography variant="body2" color="textSecondary" align="center">

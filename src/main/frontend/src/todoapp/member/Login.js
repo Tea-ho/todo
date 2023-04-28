@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 export default function Login( props ) {
 
+    // handleSubmit 메소드 생성 (기능: username, password 데이터 받아와서 ApiService 컴포넌트에 signin 메소드로 데이터 전송)
     const handleSubmit = (e) => {
         e.preventDefault();
         const data = new FormData(e.target);

@@ -13,7 +13,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    // user 등록
+    // 1. user 등록
     public UserEntity create(final UserEntity userEntity){
         // 유효성 검사1: 빈값으로 들어왔을 때 제어
         if(userEntity == null || userEntity.getUsername() == null){
@@ -28,7 +28,7 @@ public class UserService {
         return userRepository.save(userEntity);
     }
     
-    // 유저 정보 반환 (조건: 이름과 비밀번호 일치 여부)
+    // 2. 유저 정보 반환 (조건: 이름과 비밀번호 일치 여부)
     public UserEntity getByCredentials(final String username, final String password, final PasswordEncoder encoder){
 
         final UserEntity entity = userRepository.findByUsername(username);

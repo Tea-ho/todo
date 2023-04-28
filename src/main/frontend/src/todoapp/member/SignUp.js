@@ -4,16 +4,19 @@ import { signup } from '../service/ApiService';
 import { Link } from 'react-router-dom';
 
 export default function SignUp( props ) {
+
+    // handleSubmit 메소드 생성 (기능: username, password 데이터 받아와서 ApiService 컴포넌트에 signin 메소드로 데이터 전송)
     const handleSubmit = ( event ) => {
         event.preventDefault();
         const data = new FormData( event.target );
         const username = data.get( 'username' );
         const password = data.get( 'password' );
         signup( {username: username, password: password} )
-            .then( response => {
+            .then( response => { // 정상적으로 회원가입 되면, login 페이지로 이동
                 window.location.href = '/member/login';
             });
     };
+
     return (
         <Container component="main" maxWidth="xs" style={{marginTop:"8%"}}>
             <form noValidate onSubmit={handleSubmit}>

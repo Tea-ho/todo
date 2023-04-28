@@ -3,13 +3,14 @@ import { Button, Grid, TextField } from '@mui/material';
 
 export default function AddTodo( props ) {
 
+    // 1. 상태 변수 선언 (item 관리)
     const [ item, setItem ] = useState({title: ""}, {content: ""});
     // 해석1: item필드와 setItem Setter 생성
     // 해석2: useState가 생성자 역할 담당(초기화)
     // 해석3: item 필드 안에 title과 content 변수 생성한 후, 공백으로 초기화 진행
-        // console.log(useState);
+        // console.log(useState); // --- 확인 완료
 
-    // onInputChange 메소드 생성(기능: 입력창에 입력된 값 추출)
+    // 2. onInputChange 메소드 생성(기능: 입력창에 입력된 값 추출)
     const onInputChange = (e) => {
             // console.log(e);
             // console.log(e.target);
@@ -20,13 +21,13 @@ export default function AddTodo( props ) {
     const addItem = props.addItem;
     // 해석: 필드 생성 및 초기화 (props로 들어온 정보 중 addItem으로 초기화 진행)
 
-    // onButtonClick 메소드 생성(기능: addItem메소드에 매개변수로 item 전달 후 title값 공백으로 초기화)
+    // 3. onButtonClick 메소드 생성(기능: addItem메소드에 매개변수로 item 전달 후 title값 공백으로 초기화)
     const onButtonClick = ()=>{
         addItem(item);
         setItem({title:""})
     }
 
-    // enterKeyEventHandler 메소드 생성 (기능: enter key 눌리면, onButtonClick 메소드 작동)
+    // 4. enterKeyEventHandler 메소드 생성 (기능: enter key 눌리면, onButtonClick 메소드 작동)
     const enterKeyEventHandler = (e) => {
         if(e.key==='Enter'){
             onButtonClick();

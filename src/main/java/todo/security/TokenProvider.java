@@ -13,6 +13,7 @@ import java.util.Date;
 
 @Service@Slf4j
 public class TokenProvider {
+// JWT(Json Web Token) 생성 및 검증을 담당하는 TokenProvider 클래스
     private static final String SECRET_KEY = "FlRpX30pMqDbiAkmlfArbrmVkDD4RqISskGZmBFax5oGVxzXXWUzTR5JyskiHMIV9M10icegkpi46AdvrcX1E6CmTUBc6IFbTPiD";
 
     public String create(UserEntity userEntity){

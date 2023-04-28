@@ -3,17 +3,10 @@ import {API_BASE_URL} from '../api-config';
 
 export function call(api, method, request){
 
-    let headers = new Headers({
-        "Content-Type": "application/json",
-    })
-
-    const accessToken = localStorage.getItem('ACCESS_TOKEN');
-    if(accessToken && accessToken !== null){
-        headers.append('Authorization', 'Bearer'+ accessToken);
-    }
-
     let options = {
-        headers: headers,
+        headers: new Headers({
+                         "Content-Type": "application/json",
+                     }),
         url: API_BASE_URL + api,
         method: method,
     };
@@ -22,17 +15,14 @@ export function call(api, method, request){
         options.body = JSON.stringify(request);
     }
     return fetch(options.url, options)
-        .then(response => {
+        .then( (response) => {
             if(response.status === 200){
                 return response.json();
-            } else if(response.status === 403){
-                window.location.href = '/member/login';
-            } else {
-                throw Error(response);
             }
             }).catch((error) => {
+                console.log("http error");
                 console.log(error);
-            })
+            });
 }
 
 export function signin(userDto){

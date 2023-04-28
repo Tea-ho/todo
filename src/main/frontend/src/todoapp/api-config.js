@@ -1,3 +1,4 @@
+// backendHost 연결용 파일
 let backendHost;
 
 const hostname = window && window.location && window.location.hostname;

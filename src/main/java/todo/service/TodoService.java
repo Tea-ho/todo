@@ -1,7 +1,5 @@
 package todo.service;
 
-import org.springframework.http.ResponseEntity;
-import todo.domain.dto.TodoDto;
 import todo.domain.entity.TodoEntity;
 import todo.domain.entity.TodoEntityRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -81,18 +79,4 @@ public class TodoService {
         return retrieve(entity.getUserId());
         // 해석: entity 삭제처리하고 랜더링 진행
     }
-
-    // 2. writetodo 메소드 할일 등록 (사용하지 않는 메소드)
-    /*
-    @Transactional
-    public boolean writeTodo(TodoDto todoDto){
-        log.info("service todo post : " +todoDto );
-        TodoEntity entity = todoEntityRepository.save(todoDto.toEntity());
-
-        if(entity.getId() != null ){
-            return true;
-        }
-
-        return false;
-    }*/
 }
