@@ -1,8 +1,9 @@
 # todo
 todo study project
 
-#### 0. 시현 영상 
-https://youtu.be/AresmJnatTk
+#### 0. 시현 영상 및 PT자료
+- 영상: https://youtu.be/AresmJnatTk
+- 자료: [todo_project.pdf](https://github.com/Tea-ho/todo/files/11354951/todo_project.pdf)
 
 #### 1. 주제 선정 이유
 - SpringBoot, React.js 학습
@@ -21,5 +22,3 @@ Java, MySQL, Spring Boot, React.js, Restful API(JSON), Jquery, mui
 #### 5. MVC Structure
 ![image](https://user-images.githubusercontent.com/119651889/235175861-f58201bd-3e2d-4807-b2c8-b8be1e5722c1.png)
 
-#### 6. PT 자료
-[todo_project.pdf](https://github.com/Tea-ho/todo/files/11354951/todo_project.pdf)
