@@ -16,7 +16,7 @@ https://youtu.be/AresmJnatTk
 Java, MySQL, Spring Boot, React.js, Restful API(JSON), Jquery, mui
 
 #### 4. MySQL ER diagram
-![image](https://user-images.githubusercontent.com/119651889/235175876-27d9de99-a2cc-4f61-a5f8-3667a806be7f.png)
+![image](https://user-images.githubusercontent.com/119651889/235180446-7c4104ef-306a-47ca-94a7-d3d991f1d2f0.png)
 
 #### 5. MVC Structure
 ![image](https://user-images.githubusercontent.com/119651889/235175861-f58201bd-3e2d-4807-b2c8-b8be1e5722c1.png)
