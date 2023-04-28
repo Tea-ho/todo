@@ -22,3 +22,4 @@ Java, MySQL, Spring Boot, React.js, Restful API(JSON), Jquery, mui
 ![image](https://user-images.githubusercontent.com/119651889/235175861-f58201bd-3e2d-4807-b2c8-b8be1e5722c1.png)
 
 #### 6. PT 자료
+[todo_project.pdf](https://github.com/Tea-ho/todo/files/11354951/todo_project.pdf)
