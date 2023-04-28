@@ -5,9 +5,9 @@ todo study project
 https://youtu.be/AresmJnatTk
 
 #### 1. 주제 선정 이유
-1) SpringBoot, React.js 학습
-2) Spring Security 학습
-3) CORS 학습
+- SpringBoot, React.js 학습
+- Spring Security 학습
+- CORS 학습
 
 #### 2. WBS
 ![image](https://user-images.githubusercontent.com/119651889/235175992-d328d8d1-be7d-48f1-b58f-8895129a9aa6.png)
